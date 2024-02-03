@@ -14,8 +14,10 @@ def get_user_folder():
 def print_with_time(content):
     print(f'[{get_time()}] {content}')
 
+
 def print_with_time_(content, msg):
     print(f'[{get_time()} {msg}] {content}')
+
 
 def get_time():
     now = datetime.now()
