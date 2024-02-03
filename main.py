@@ -43,6 +43,7 @@ async def initialization():
             player_name = input(f'[{utils.get_time()}] 请输入你的昵称（在地图上显示）: ')
             config.creat_config(identification_number, player_name)
     else:
+        utils.print_with_time('未找到Config，将创建:')
         identification_number = input(f'[{utils.get_time()}] 请输入ConnectionNumber（点击地图左下角的Connect）: ')
         player_name = input(f'[{utils.get_time()}] 请输入你的昵称（在地图上显示）: ')
         config.creat_config(identification_number, player_name)

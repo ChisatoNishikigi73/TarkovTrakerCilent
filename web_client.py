@@ -35,7 +35,7 @@ async def send_greeting_req(identification_number, player_name):
         "identification_number": identification_number
     }
     if await send_proto(api, proto):
-        utils.print_with_time_(f"\033[0;32;40mHello! {player_name}\033[0m", "Server")
+        utils.print_with_time_(f"Hello! {player_name}", "Server")
         return True
     else:
         return False
