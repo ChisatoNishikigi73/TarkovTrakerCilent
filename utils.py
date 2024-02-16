@@ -1,6 +1,7 @@
-import re
-from datetime import datetime
 import os
+import re
+import sys
+from datetime import datetime
 
 import utils
 
@@ -27,13 +28,20 @@ def get_time():
 def extract_information(input_string):
     pattern = (r'(\d{4}-\d{2}-\d{2})\[(\d{2}-\d{2})\]_(-?\d+\.\d+), (-?\d+\.\d+), (-?\d+\.\d+)_(-?\d+\.\d+), '
                r'(-?\d+\.\d+), (-?\d+\.\d+), (-?\d+\.\d+)_([\d.]+) \((\d+)\)')
-
+    pattern_factory = (r'(\d{4}-\d{2}-\d{2})\[(\d{2}-\d{2})\]_(-?\d+\.\d+), (-?\d+\.\d+), (-?\d+\.\d+)_(-?\d+\.\d+), '
+                       r'(-?\d+\.\d+), (-?\d+\.\d+), (-?\d+\.\d+) \((\d+)\)')
+    is_factory = False
     match = re.match(pattern, input_string)
+    if not match:
+        match = re.match(pattern_factory, input_string)
+        is_factory = True
     if match:
         groups = match.groups()
-
-        date_str, time_str, x, y, z, a, b, c, d, time_n, count = groups
-
+        if is_factory:
+            date_str, time_str, x, y, z, a, b, c, d, count = groups
+            time_n = -1
+        else:
+            date_str, time_str, x, y, z, a, b, c, d, time_n, count = groups
         # 转换日期和时间字符串为 datetime 对象
         date_time_str = f"{date_str} {time_str}"
         date_time = datetime.strptime(date_time_str, "%Y-%m-%d %H-%M")
@@ -55,3 +63,8 @@ def extract_information(input_string):
     else:
         utils.print_with_time("未匹配到模式")
         return
+
+
+def restart_program():
+    python = sys.executable
+    os.execl(python, python, *sys.argv)

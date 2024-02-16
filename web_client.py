@@ -1,7 +1,7 @@
 import json
+
 import websockets
 
-import WATCHDOG
 import utils
 
 uri = "ws://socket.tarkov.lycorecocafe.com"
@@ -41,7 +41,7 @@ async def send_greeting_req(identification_number, player_name):
         return False
 
 
-async def send_player_position_req(identification_number, name, coordinates):
+async def send_player_position_req(identification_number, name, coordinates, is_first_time=True):
     api = uri + '/'
     date_time, x, y, z, a, b, c, d, time_n, count = coordinates
     proto = {
@@ -49,6 +49,7 @@ async def send_player_position_req(identification_number, name, coordinates):
         "type": "command",
         "data": {
             "type": "playerPosition",
+            "is_teammate": not is_first_time,
             "playerPosition": {
                 "name": name,
                 "date_time": date_time.strftime("%H:%M:%S"),
@@ -66,6 +67,7 @@ async def send_player_position_req(identification_number, name, coordinates):
         }
     }
     if await send_proto(api, proto):
-        utils.print_with_time_(f"位置已更新: [{x}, {y}, {z}, {a}, {b}, {c}, {d}]", "Server")
+        if is_first_time:
+            utils.print_with_time_(f"位置已更新: [{x}, {y}, {z}, {a}, {b}, {c}, {d}]", "Server")
     else:
         utils.print_with_time("位置更新失败[服务器无响应]")
